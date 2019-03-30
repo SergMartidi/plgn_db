@@ -1,0 +1,16 @@
+{application, plgn_db1,
+ [{description, "An OTP application"},
+  {vsn, "0.1.0"},
+  {registered, []},
+  {mod, {plgn_db1_app, []}},
+  {applications,
+   [kernel,
+    stdlib,
+    chumak
+   ]},
+  {env,[]},
+  {modules, []},
+
+  {licenses, ["Apache 2.0"]},
+  {links, []}
+ ]}.
