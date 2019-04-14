@@ -5,8 +5,7 @@
   {mod, {plgn_db1_app, []}},
   {applications,
    [kernel,
-    stdlib,
-    chumak
+    stdlib
    ]},
   {env,[]},
   {modules, []},

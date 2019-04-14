@@ -287,12 +287,12 @@ try_connect(#state{host=Host, port=Port, parent_pid=ParentPid,
             %end,
             %timer:sleep(2000),
             case Port of
-                5555 when I==8 -> io:format("Программа завершена\n"), application:stop(chumak);
-				5555 when Reason==etimedout -> io:format("Не удалось подключиться к серверу, причина: ~p~n", [Reason]),
-											   io:format("Программа завершена\n"), application:stop(chumak);
-				5555 -> io:format("Не удалось подключиться к серверу, причина: ~p~n", [Reason]),
-						 try_connect(State, I+1);
-				5556 when I==3 -> io:format("Ошибка подключения! Вы не сможете получать уведомления\n"), try_connect(State, I+1);
+                5555 when I==8 ->  
+								  catch shell ! {peer, {error, Reason}}, try_connect(State, I+1);
+				5555 when Reason==etimedout -> 
+								  catch shell ! {peer, {error, Reason}}, try_connect(State, I+1);
+				5555 -> try_connect(State, I+1);
+				5556 when I==3 -> io:format("Subscription failed\n"), try_connect(State, I+1);
 				5556 -> try_connect(State, I+1);
 				 _   ->  try_connect(State, I)
 			end

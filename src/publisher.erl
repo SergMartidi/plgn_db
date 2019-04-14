@@ -5,7 +5,7 @@
 -export([main/0]).
 
 main() ->
-    application:start(chumak), chumak:start(1,1),
+    chumak:start(1,1),
     {ok, Socket} = chumak:socket(pub),
 
     case chumak:bind(Socket, tcp, "localhost", 5556) of
