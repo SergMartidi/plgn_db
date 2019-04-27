@@ -2,7 +2,7 @@
 %% @doc @todo Add description to subscribe.
 
 
--module(subscribe).
+-module(plgn_db1_subscribe).
 
 %% ====================================================================
 %% API functions
@@ -19,10 +19,12 @@ start_link(Fun, Args) ->
 
 connect(IP) -> 
    {ok, SocketSub} = chumak:socket(sub),
+   plgn_db1_serv ! {subpid, SocketSub},
    chumak:subscribe(SocketSub, ""),
    case chumak:connect(SocketSub, tcp, IP, 5556) of
-      {ok, _} ->
+      {ok, Pid} ->
           %io:format("Binding OK with Pid: ~p ~p\n", [SocketSub, BindPid]), 
+		  plgn_db1_serv ! {subpid, Pid},
 		  subscription(SocketSub);
       {error, ReasonSub} ->
           io:format("Subscription failed, reason: ~p\n", [ReasonSub]);

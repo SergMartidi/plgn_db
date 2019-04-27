@@ -17,10 +17,11 @@
 
 
 start() ->
+	application:start(plgn_db1),
 	IP=lists:droplast(io:get_line("Enter server IP address\n")),
-    case plgn_db1:start(IP) of
-		{error, invalid_ip} -> start();
-		{error, _} -> ok;
+    case plgn_db1:connect(IP) of
+		{error, {invalid_ip, _}} -> start();
+		{error, _} -> application:stop(plgn_db1), ok;
 		    _  -> input()
 	end.
 
@@ -49,9 +50,12 @@ input()->
 	case H of
 		"start" -> io:format("Bad command name or bad number of arguments\n"), input();
 		"stop" -> io:format("Bad command name or bad number of arguments\n"), input();
-		"exit" -> plgn_db1:stop();
+		"connect" -> io:format("Bad command name or bad number of arguments\n"), input();
+		"disconnect" -> plgn_db1:disconnect(), start();
+		"exit" -> application:stop(plgn_db1);
 		"help" -> io:format("help                                get help\n
 exit                                close application\n
+disconnect                          disconnect from server\n
 create_table <table>                create table with name <table>\n
 delete_table <table>                delete table with name <table>\n
 update <table> <key> <value>        update value of <key> in <table> with new <value>\n
@@ -69,7 +73,6 @@ get <table> <key>                   get value of <key> in <table>\n
 		 _ -> 
             case catch apply(plgn_db1, list_to_atom(H), NewArgs2) of
                 {'EXIT',{undef, _}} -> io:format("Bad command name or bad number of arguments\n"), input();
-				{ok, app_closed} -> ok;
 				              _  -> input()
 			end
     end.

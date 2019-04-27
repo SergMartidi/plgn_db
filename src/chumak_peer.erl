@@ -288,9 +288,9 @@ try_connect(#state{host=Host, port=Port, parent_pid=ParentPid,
             %timer:sleep(2000),
             case Port of
                 5555 when I==8 ->  
-								  catch shell ! {peer, {error, Reason}}, try_connect(State, I+1);
+								  catch plgn_db1_serv ! {peer, {error, Reason}}, try_connect(State, I+1);
 				5555 when Reason==etimedout -> 
-								  catch shell ! {peer, {error, Reason}}, try_connect(State, I+1);
+								  catch plgn_db1_serv ! {peer, {error, Reason}}, try_connect(State, I+1);
 				5555 -> try_connect(State, I+1);
 				5556 when I==3 -> io:format("Subscription failed\n"), try_connect(State, I+1);
 				5556 -> try_connect(State, I+1);
